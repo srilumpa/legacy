@@ -1,0 +1,59 @@
+- title ||= ''
+- url_filter ||= {}
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= title
+  .panel-body
+    - if collection.empty?
+      Nothing new...
+    - else
+      - case collection.size
+      - when 1
+        = image_tag item_image_path(collection[0], version: 'big'), class: 'img-responsive', alt: 'No image'
+      - when 2
+        .col-md-6
+          = image_tag item_image_path(collection[0], version: 'big'), class: 'img-responsive', alt: 'No image'
+        .col-md-6
+          = image_tag item_image_path(collection[1], version: 'big'), class: 'img-responsive', alt: 'No image'
+      - when 3
+        .col-md-6
+          = image_tag item_image_path(collection[0], version: 'big'), class: 'img-responsive', alt: 'No image'
+        .col-md-6
+          .row
+            = image_tag item_image_path(collection[1], version: 'big'), class: 'img-responsive', alt: 'No image'
+          .row
+            = image_tag item_image_path(collection[2], version: 'big'), class: 'img-responsive', alt: 'No image'
+      - when 4
+        .col-md-6
+          .row
+            = image_tag item_image_path(collection[0], version: 'big'), class: 'img-responsive', alt: 'No image'
+          .row
+            = image_tag item_image_path(collection[3], version: 'big'), class: 'img-responsive', alt: 'No image'
+        .col-md-6
+          .row
+            = image_tag item_image_path(collection[1], version: 'big'), class: 'img-responsive', alt: 'No image'
+          .row
+            = image_tag item_image_path(collection[2], version: 'big'), class: 'img-responsive', alt: 'No image'
+      - else
+        .col-md-6
+          .row
+            = image_tag item_image_path(collection[0], version: 'big'), class: 'img-responsive', alt: 'No image'
+        .col-md-6
+          .row
+            .col-md-6
+              = image_tag item_image_path(collection[1], version: 'big'), class: 'img-responsive', alt: 'No image'
+            .col-md-6
+              = image_tag item_image_path(collection[2], version: 'big'), class: 'img-responsive', alt: 'No image'
+          .row
+            .col-md-6
+              = image_tag item_image_path(collection[3], version: 'big'), class: 'img-responsive', alt: 'No image'
+            .col-md-6
+              = image_tag item_image_path(collection[4], version: 'big'), class: 'img-responsive', alt: 'No image'
+  .panel-footer
+    - if collection.empty?
+      = link_to 'See all', items_path
+    - else
+      - if collection.size <= 5
+        = link_to 'See items', items_path(url_filter)
+      - else
+        = link_to "... and #{collection.size - 5} more", items_path(url_filter)

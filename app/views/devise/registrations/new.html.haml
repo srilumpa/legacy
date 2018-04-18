@@ -1,0 +1,17 @@
+.row
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title Sign up
+      .panel-body
+        = bootstrap_form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+          = devise_error_messages!
+          = f.text_field :username, :required => true, :autofocus => true
+          = f.email_field :email, :required => true
+          = f.password_field :password, :required => true
+          = f.password_field :password_confirmation, :required => true
+          - unless Recaptcha.configuration.site_key.nil?
+            = recaptcha_tags
+          = f.submit 'Sign up', :class => 'btn btn-success'
+
+        = render "devise/shared/links"

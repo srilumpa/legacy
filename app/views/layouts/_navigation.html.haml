@@ -1,0 +1,21 @@
+%nav.navbar.navbar-inverse.navbar-fixed-top
+  .container
+    .navbar-header
+      %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", :type => "button"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to fa_icon('archive', text: 'Legacy'), root_path, class: 'navbar-brand'
+    .collapse.navbar-collapse
+      - if signed_in?
+        %ul.nav.navbar-nav
+          - if can? :read, Item
+            %li= link_to fa_icon('cubes', text: 'Items'), items_path
+        %ul.nav.navbar-nav.navbar-right
+          = render 'layouts/menus/admin'
+          = render 'layouts/menus/user'
+      - else
+        %ul.nav.navbar-nav.navbar-right
+          %li= link_to 'Login', new_user_session_path
+          %li= link_to 'Sign up', new_user_registration_path

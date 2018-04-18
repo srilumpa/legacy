@@ -1,0 +1,11 @@
+.row
+  .col-md-6
+    = render 'items/gallery', title: 'New items since your last connection', url_filter: {created_at: current_user.last_sign_in_at}, collection: @new_items if can?(:read, Item)
+  .col-md-6
+    = render 'items/gallery', title: 'Recently locked items', url_filter: {locked_at: current_user.last_sign_in_at}, collection: @recently_locked_items if can?(:read, Item)
+  .col-md-6
+    = render 'items/gallery', title: 'Items you claimed', url_filter: {users: [current_user.username]}, collection: @claimed_items if can?(:read, Item)
+  .col-md-6
+    = render 'admin/users/summary', title: 'New users', collection: @new_users if can?(:manage, User)
+  .col-md-6
+    = render 'admin/users/summary', title: 'Locked users', collection: @locked_users if can?(:manage, User)

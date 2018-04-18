@@ -1,0 +1,27 @@
+%table.table.table-hover
+  %thead
+    %tr
+      %th Username
+      %th Last connection
+      %th Locked
+      %th.th-fit
+  %tbody
+    - collection.each do |user|
+      %tr{ class: "#{'text-muted' if !user.locked_at.nil?}" }
+        %td
+          - if user.admin?
+            = fa_icon 'star', text: user.username, right: true, class: 'text-warning'
+          - else
+            = user.username
+        %td= user.current_sign_in_at.nil? ? 'Never' : l(user.current_sign_in_at, format: :short)
+        %td= user.locked_at.nil? ? 'No' : l(user.locked_at, format: :short)
+        %td.td-fit.td-nowrap
+          - if user.admin?
+            = link_to fa_icon('star', text: 'Admin'), admin_user_toggle_admin_path(user), method: :put, title: 'Set to user', class: 'btn btn-sm btn-warning', data: {confirm: "Are you sure to unset admin status to user #{user.username}?"}
+          - else
+            = link_to 'User', admin_user_toggle_admin_path(user), method: :put, title: 'Set to admin', class: 'btn btn-sm btn-warning', data: {confirm: "Are you sure to promote as admin user #{user.username}?"}
+          - if user.locked_at.nil?
+            = link_to fa_icon('lock', text: 'Lock'), admin_user_lock_path(user), method: :put, title: 'Lock user', class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure to lock user #{user.username}?"}
+          - else
+            = link_to fa_icon('unlock', text: 'Unlock'), admin_user_unlock_path(user), method: :put, title: 'Lock user', class: 'btn btn-sm btn-default', data: {confirm: "Are you sure to unlock user #{user.username}?"}
+          = link_to fa_icon('trash-o', text: 'Delete'), admin_user_path(user), method: :delete, data: {confirm: "Are you sure to delete user #{user.username}?"}, title: 'Remove user', class: 'btn btn-sm btn-danger'

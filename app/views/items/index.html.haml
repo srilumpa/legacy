@@ -1,0 +1,49 @@
+- params[:location] ||= []
+- params[:users] ||= []
+- content_for :toolbar do
+  .navbar-header
+    %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#toolbar-navbar-collapse'}}
+      .sr-only Toggle navigation
+      .icon-bar
+      .icon-bar
+      .icon-bar
+    %a.navbar-brand{href: '#'}= fa_icon 'cubes', text: 'Items'
+  #toolbar-navbar-collapse.collapse.navbar-collapse
+    -if can? :manage, :item
+      %ul.nav.navbar-nav.navbar-right
+        %li=link_to fa_icon('plus-circle', text: 'New'), new_item_path
+    %form.navbar-form.navbar-left
+      .btn-group
+        %button.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', 'aria-expanded' => false}= fa_icon('caret-down', text: 'Locked')
+        %ul.dropdown-menu{role: 'menu'}
+          %li= link_to fa_icon((params[:locked] == nil ? 'check-square-o' : 'square-o'), text: 'All'), @selected_options.merge({locked: nil})
+          %li= link_to fa_icon((params[:locked] == 'true' ? 'check-square-o' : 'square-o'), text: 'Locked'), @selected_options.merge({locked: true})
+          %li= link_to fa_icon((params[:locked] == 'false' ? 'check-square-o' : 'square-o'), text: 'Unlocked'), @selected_options.merge({locked: false})
+      .btn-group
+        %button.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', 'aria-expanded' => false}= fa_icon('caret-down', text: 'Claimed')
+        %ul.dropdown-menu{role: 'menu'}
+          %li= link_to fa_icon((params[:claimed] == nil ? 'check-square-o' : 'square-o'), text: 'All'), @selected_options.merge({claimed: nil, users: nil})
+          %li= link_to fa_icon((params[:claimed] == 'noone' ? 'check-square-o' : 'square-o'), text: 'No one'), @selected_options.merge({claimed: 'noone', users: nil})
+          %li= link_to fa_icon((params[:claimed] == 'one' ? 'check-square-o' : 'square-o'), text: 'One person'), @selected_options.merge({claimed: 'one', users: nil})
+          %li= link_to fa_icon((params[:claimed] == 'several' ? 'check-square-o' : 'square-o'), text: 'Several person'), @selected_options.merge({claimed: 'several', users: nil})
+          %li.divider
+          - @users.each do |u|
+            %li= link_to fa_icon(((params[:users] || []).include?(u.username) ? 'check-square-o' : 'square-o'), text: ( u == current_user ? '<me>' : u.to_s)), @selected_options.merge({claimed: nil, users: (@selected_options[:users].include?(u.username) ? @selected_options[:users] - [u.username] : @selected_options[:users] + [u.username] )})
+      .btn-group
+        %button.btn.btn-default.dropdown-toggle{'data-toggle' => 'dropdown', 'aria-expanded' => false}= fa_icon('caret-down', text: 'Location')
+        %ul.dropdown-menu{role: 'menu'}
+          %li= link_to fa_icon((params[:location] == [] ? 'check-square-o' : 'square-o'), text: 'All'), @selected_options.merge({location: nil})
+          %li= link_to fa_icon((params[:location].include?('') ? 'check-square-o' : 'square-o'), text: 'Not defined'), @selected_options.merge({location: (@selected_options[:location].include?('') ? @selected_options[:location] - [''] : @selected_options[:location] + [''] )})
+          - @locations.each do |l|
+            %li= link_to fa_icon((params[:location].include?(l) ? 'check-square-o' : 'square-o'), text: l.titleize), @selected_options.merge({location: (@selected_options[:location].include?(l) ? @selected_options[:location] - [l] : @selected_options[:location] + [l] )})
+
+- if @items.empty?
+  .panel.panel-default
+    .panel-heading
+    = render 'collection', collection: @items
+- else
+  - @items.keys.sort.each do |loc|
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= loc.blank? ? 'Not defined' : loc.titleize
+      = render 'collection', collection: @items[loc]

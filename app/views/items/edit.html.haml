@@ -1,0 +1,21 @@
+- content_for :toolbar do
+  .navbar-header
+    %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#toolbar-navbar-collapse'}}
+      .sr-only Toggle navigation
+      .icon-bar
+      .icon-bar
+      .icon-bar
+    = link_to fa_icon('chevron-left', text: "Edit item ##{@item}"), items_path, class: 'navbar-brand'
+
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title Item
+      .panel-body
+        = render 'form', item: @item
+  .col-md-6
+    - if @item.image?
+      .panel.panel-default
+        .panel-body
+          = image_tag item_image_path(@item), style: 'max-width: 100%'

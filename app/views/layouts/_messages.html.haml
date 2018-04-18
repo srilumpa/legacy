@@ -1,0 +1,13 @@
+- flash.each do |key, value|
+  - type = case key
+  - when 'alert'
+    - 'danger'
+  - when 'recacptcha_error'
+    - 'danger'
+  - when 'notice'
+    - 'success'
+  - else
+    - key
+  .alert.alert-dismissible{class: "alert-#{type}"}
+    %button.close{type: 'button', 'data-dismiss' => 'alert', 'aria-label' => 'close'}= fa_icon 'close'
+    = value

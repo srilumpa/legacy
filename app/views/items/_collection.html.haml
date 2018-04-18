@@ -1,0 +1,64 @@
+%table.table.table-condensed.table-hover
+  %thead
+    %tr
+      - if can? :manage, :item
+        %th.th-fit
+      %th.th-nowrap.th-fit Reference
+      %th.th-fit{colspan: 2} Description
+      - @users.each do |user|
+        %th.th-fit= user
+  %tbody
+    - if collection.empty?
+      %tr
+        %td{colspan: "#{3 + (can?(:manage, :item) ? 1 : 0) + (@users.size)}"}
+          .text-center No items
+    - else
+      - collection.each do |i|
+        %tr{class: "#{'text-muted' if i.locked}"}
+          -if can? :manage, :item
+            %td.td-fit.td-nowrap
+              =link_to fa_icon('pencil'), edit_item_path(i), title: 'Edit item'
+              =link_to fa_icon('trash-o'), item_path(i), method: :delete, data: {confirm: 'Are you sure ?'}, title: 'Remove item', class: 'text-danger'
+              - if i.locked
+                =link_to fa_icon('unlock'), item_unlock_path(i), method: :put, title: 'Unlock item'
+              - else
+                =link_to fa_icon('lock'), item_lock_path(i), method: :put, title: 'Lock item'
+          %td.td-nowrap.td-fit= i.ref
+          %td.td-fit{style: 'min-width: 50px;'}
+            %a.thumbnail.text-center{title: 'Show image', 'data-toggle' => 'modal', 'data-target' => '#image_modal', 'data-title' => "#{i.ref}", 'data-item' => "#{i._id}", style: 'cursor:pointer'}
+              = image_tag(item_image_path(i, version: 'thumb'), style: 'display: inline', alt: 'No image')
+          %td= i.description
+          - @users.each do |user|
+            %td{style: 'vertical-align:middle'}
+              - if user.id == current_user.id && !i.locked
+                - if i.user_ids.include?(user.id)
+                  = link_to fa_icon('check-circle-o', class: 'text-success fa-lg'), item_unclaim_path(i), method: :put, title: 'Unclaim item'
+                - else
+                  = link_to fa_icon('circle-o', class: 'text-info fa-lg'), item_claim_path(i), method: :put, title: 'Claim item'
+              - else
+                = fa_icon('check-circle-o', class: ' fa-lg') if i.user_ids.include?(user.id)
+
+#image_modal.modal.fade{role: 'dialog', 'aria-labelledby' => 'myModal', 'aria-hidden' => true}
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header
+        %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => "Close"}
+          %span{'aria-hidden'=>'true'}= fa_icon 'close'
+        %h4.modal-title
+      .modal-body
+        %a
+          %img.img-responsive
+      .modal-footer
+        %button.btn.btn-default{type: 'button', 'data-dismiss' => 'modal'} Close
+
+:javascript
+  $('#image_modal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var title = button.data('title');
+    var item = button.data('item');
+    var modal = $(this);
+    modal.find('.modal-title').text(title);
+    modal.find('.modal-body a').attr('href', '/items/'+item+'/image');
+    modal.find('.modal-body a img').attr('src', '/items/'+item+'/image?version=big');
+  }
+  );
