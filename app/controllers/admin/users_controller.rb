@@ -8,7 +8,7 @@ class Admin::UsersController < ApplicationController
     @selected_options = {}
 
     sanitizer = Rails::Html::FullSanitizer.new
-    (['locked', 'admin'] & params.keys).each do |key|
+    (['locked', 'admin', 'valid_user'] & params.keys).each do |key|
       @selected_options[key.to_sym] = params[key].is_a?(Array) ? params[key].map { |e| sanitizer.sanitize e } : sanitizer.sanitize(params[key])
     end
     if @selected_options[:locked]
@@ -25,6 +25,14 @@ class Admin::UsersController < ApplicationController
         @users = @users.where(admin: true)
       when 'false'
         @users = @users.where(admin: false)
+      end
+    end
+    if @selected_options[:valid_user]
+      case @selected_options[:valid_user]
+      when 'true'
+        @users = @users.where(valid_user: true)
+      when 'false'
+        @users = @users.where(valid_user: false)
       end
     end
   end
