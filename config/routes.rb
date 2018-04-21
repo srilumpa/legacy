@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       put :lock
       put :unlock
       put :toggle_admin
+      put :toggle_valid
     end
   end
 

@@ -16,10 +16,14 @@
         %td= user.current_sign_in_at.nil? ? 'Never' : l(user.current_sign_in_at, format: :short)
         %td= user.locked_at.nil? ? 'No' : l(user.locked_at, format: :short)
         %td.td-fit.td-nowrap
-          - if user.admin?
-            = link_to fa_icon('star', text: 'Admin'), admin_user_toggle_admin_path(user), method: :put, title: 'Set to user', class: 'btn btn-sm btn-warning', data: {confirm: "Are you sure to unset admin status to user #{user.username}?"}
+          - if user.valid_user?
+            - if user.admin?
+              = link_to fa_icon('star', text: 'Admin'), admin_user_toggle_admin_path(user), method: :put, title: 'Set to user', class: 'btn btn-sm btn-warning', data: {confirm: "Are you sure to unset admin status to user #{user.username}?"}
+            - else
+              = link_to fa_icon('star-o', text: 'Admin'), admin_user_toggle_admin_path(user), method: :put, title: 'Set to admin', class: 'btn btn-sm btn-muted', data: {confirm: "Are you sure to promote as admin user #{user.username}?"}
+              = link_to 'User', admin_user_toggle_valid_path(user), method: :put, title: 'Set to guest', class: 'btn btn-sm btn-success'
           - else
-            = link_to 'User', admin_user_toggle_admin_path(user), method: :put, title: 'Set to admin', class: 'btn btn-sm btn-warning', data: {confirm: "Are you sure to promote as admin user #{user.username}?"}
+            = link_to 'Guest', admin_user_toggle_valid_path(user), method: :put, title: 'Validate user', class: 'btn btn-sm btn-primary'
           - if user.locked_at.nil?
             = link_to fa_icon('lock', text: 'Lock'), admin_user_lock_path(user), method: :put, title: 'Lock user', class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure to lock user #{user.username}?"}
           - else

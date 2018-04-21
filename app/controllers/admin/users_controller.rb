@@ -1,12 +1,12 @@
 class Admin::UsersController < ApplicationController
   authorize_resource
 
-  before_action :set_user, only: [:destroy, :lock, :unlock, :toggle_admin]
+  before_action :set_user, only: [:destroy, :lock, :unlock, :toggle_admin, :toggle_valid]
 
   def index
     @users = User.all
     @selected_options = {}
-    
+
     sanitizer = Rails::Html::FullSanitizer.new
     (['locked', 'admin'] & params.keys).each do |key|
       @selected_options[key.to_sym] = params[key].is_a?(Array) ? params[key].map { |e| sanitizer.sanitize e } : sanitizer.sanitize(params[key])
@@ -47,6 +47,11 @@ class Admin::UsersController < ApplicationController
   def toggle_admin
     @user.toggle_admin!
     redirect_to admin_users_path, notice: "Admin status successfully #{@user.admin? ? 'set' : 'removed'}."
+  end
+
+  def toggle_valid
+    @user.toggle_valid_user!
+    redirect_to admin_users_path, notice: "Valid user status successfully #{@user.valid_user? ? 'set' : 'removed'}."
   end
 
   private
