@@ -36,6 +36,7 @@ class User
   field :locked_at,       type: Time
 
   field :username, type: String, default: ''
+  field :valid_user, type: Boolean, default: false
   field :admin, type: Boolean, default: false
   has_and_belongs_to_many :items
 
@@ -47,6 +48,15 @@ class User
     username || email
   end
 
+  def valid_user?
+    valid_user
+  end
+
+  def toggle_valid_user!
+    self.valid_user = !self.valid_user?
+    self.save!
+  end
+
   def admin?
     admin
   end
@@ -54,5 +64,11 @@ class User
   def toggle_admin!
     self.admin = !self.admin?
     self.save!
+  end
+
+  def status
+    return :admin if self.admin?
+    return :valid_user if self.valid_user?
+    return :guest
   end
 end

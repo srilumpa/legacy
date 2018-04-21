@@ -6,7 +6,7 @@ class Ability
     unless user.nil?
       if user.admin?
         can :manage, :all
-      else
+      elsif user.valid_user?        
         can :read, Item
         can :claim, Item
         can :unclaim, Item
