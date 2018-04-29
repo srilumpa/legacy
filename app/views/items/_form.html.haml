@@ -1,9 +1,9 @@
 = bootstrap_form_for item, html: {multipart: true} do |f|
 
-  = f.text_field :ref, label: 'Reference'
-  = f.text_area :description
-  = f.text_field :location
   = f.file_field :image, as: :file
+  = f.text_field :ref, label: 'Reference'
+  = f.text_field :location
+  = f.text_area :description
 
   - if params[:action] == 'edit'
     = f.submit 'Update', class: 'btn btn-primary'
