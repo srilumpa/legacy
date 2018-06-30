@@ -13,4 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
+//= require cookieconsent.min
 //= require_tree .
+
+function cookie_consent() {
+  window.cookieconsent.initialise({
+    location: true,
+    revokable: true
+  });
+}

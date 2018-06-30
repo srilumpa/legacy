@@ -44,6 +44,7 @@ gem 'bootstrap_form'
 gem 'bootswatch-rails'
 gem 'font-awesome-rails'
 # gem 'jquery-turbolinks'
+gem 'cookieconsent2-rails'
 
 gem 'mini_magick'
 gem 'axlsx_rails'

@@ -8,7 +8,7 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
     = yield(:head) if content_for?(:head)
-  %body{class: "layout-fluid #{'with-toolbar' if content_for? :toolbar}"}
+  %body{class: "layout-fluid #{'with-toolbar' if content_for? :toolbar}", onload: 'cookie_consent()'}
     %header
       = render 'layouts/navigation'
       = render 'layouts/toolbar' if content_for? :toolbar
