@@ -74,7 +74,7 @@ GEM
       activemodel (>= 5.2)
     bootswatch-rails (3.3.5)
       railties (>= 3.1)
-    brakeman (5.2.1)
+    brakeman (5.2.2)
     bson (4.14.1)
     builder (3.2.4)
     byebug (11.1.3)
