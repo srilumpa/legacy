@@ -1,4 +1,4 @@
-FROM ruby:3.0-slim
+FROM ruby:3.2-slim
 
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=enabled
